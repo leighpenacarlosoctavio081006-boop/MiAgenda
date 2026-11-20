@@ -1,0 +1,254 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Metadata de sincronizacion del estudiante propietario de la agenda.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "displayName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "seeded": {
+          "type": "boolean"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["uid", "displayName", "seeded", "createdAt", "updatedAt"]
+    },
+    "CourseClass": {
+      "title": "CourseClass",
+      "description": "Sesion o clase programada del curso de Google AI Studio.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "ownerId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 140
+        },
+        "topic": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "date": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 10,
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "startTime": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 5,
+          "pattern": "^\\d{2}:\\d{2}$"
+        },
+        "durationMinutes": {
+          "type": "number"
+        },
+        "instructor": {
+          "type": "string",
+          "maxLength": 80
+        },
+        "location": {
+          "type": "string",
+          "maxLength": 120
+        },
+        "priority": {
+          "type": "string",
+          "enum": ["baja", "media", "alta"]
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "ownerId",
+        "title",
+        "topic",
+        "date",
+        "startTime",
+        "durationMinutes",
+        "instructor",
+        "location",
+        "priority",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "CourseTask": {
+      "title": "CourseTask",
+      "description": "Tarea o entrega del curso con fecha limite y estado pendiente o completada.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "ownerId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 1000
+        },
+        "dueDate": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 10,
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "topic": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "completed": {
+          "type": "boolean"
+        },
+        "priority": {
+          "type": "string",
+          "enum": ["baja", "media", "alta"]
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "ownerId",
+        "title",
+        "description",
+        "dueDate",
+        "topic",
+        "completed",
+        "priority",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "CourseNote": {
+      "title": "CourseNote",
+      "description": "Apunte de estudio organizado por tema del curso.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "ownerId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "topic": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "content": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 5000
+        },
+        "date": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 10,
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "ownerId",
+        "title",
+        "topic",
+        "content",
+        "date",
+        "createdAt",
+        "updatedAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "Perfil minimo del estudiante propietario para aislar colecciones privadas."
+    },
+    "/users/{userId}/classes/{classId}": {
+      "schema": { "$ref": "#/entities/CourseClass" },
+      "description": "Clases del curso pertenecientes al usuario."
+    },
+    "/users/{userId}/tasks/{taskId}": {
+      "schema": { "$ref": "#/entities/CourseTask" },
+      "description": "Tareas y fechas de entrega pertenecientes al usuario."
+    },
+    "/users/{userId}/notes/{noteId}": {
+      "schema": { "$ref": "#/entities/CourseNote" },
+      "description": "Apuntes y notas del curso pertenecientes al usuario."
+    }
+  }
+}
