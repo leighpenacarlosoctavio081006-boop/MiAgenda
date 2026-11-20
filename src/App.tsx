@@ -9,6 +9,7 @@ import {
   Home,
   Maximize2,
   Smartphone,
+  Tablet,
   Wifi,
   Battery,
 } from 'lucide-react';
@@ -39,6 +40,8 @@ type DeleteTarget =
   | { type: 'nota'; id: string; name: string }
   | null;
 
+type ViewMode = 'movil' | 'tablet' | 'completa';
+
 function AgendaApp() {
   const {
     user,
@@ -60,7 +63,7 @@ function AgendaApp() {
   } = useAgendaStore();
 
   const [activeSection, setActiveSection] = useState<AppSection>('inicio');
-  const [deviceFrameMode, setDeviceFrameMode] = useState<boolean>(true);
+  const [viewMode, setViewMode] = useState<ViewMode>('tablet');
 
   // Modales de formulario
   const [classSheetOpen, setClassSheetOpen] = useState(false);
@@ -117,52 +120,70 @@ function AgendaApp() {
     if (deleteTarget.type === 'nota') await deleteNote(deleteTarget.id);
   };
 
+  const containerClasses =
+    viewMode === 'movil'
+      ? 'md:max-w-[420px] md:h-[880px] md:rounded-[48px] md:border-[10px] md:border-slate-950 md:shadow-2xl md:ring-1 md:ring-slate-700'
+      : viewMode === 'tablet'
+        ? 'md:max-w-[768px] md:h-[900px] md:rounded-[36px] md:border-[10px] md:border-slate-900 md:shadow-2xl md:ring-1 md:ring-slate-700'
+        : 'min-h-screen max-w-5xl mx-auto md:rounded-2xl md:my-4 md:shadow-xl';
+
   return (
     <div className="min-h-screen bg-slate-900 text-slate-900 flex flex-col items-center justify-start md:py-6 md:px-4">
-      {/* Botón flotante superior en escritorio para alternar simulación de teléfono */}
-      <aside aria-label="Controles de visualización" className="hidden md:flex items-center justify-between w-full max-w-md mb-3 px-2 text-white">
+      {/* Controles superiores en escritorio para cambiar entre Móvil, Tablet y Pantalla Completa */}
+      <aside aria-label="Controles de visualización" className="hidden md:flex items-center justify-between w-full max-w-xl mb-3 px-2 text-white">
         <div className="flex items-center gap-2">
-          <Smartphone className="w-4 h-4 text-blue-400" aria-hidden="true" />
+          <Tablet className="w-4 h-4 text-blue-400" aria-hidden="true" />
           <span className="text-xs font-semibold tracking-wide uppercase text-slate-300">
-            Aplicación Móvil Exclusiva
+            Vista para Móviles y Tablets
           </span>
         </div>
-        <button
-          type="button"
-          onClick={() => setDeviceFrameMode(!deviceFrameMode)}
-          className="min-h-[36px] px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 inline-flex items-center gap-1.5 transition-colors"
-        >
-          {deviceFrameMode ? (
-            <>
-              <Maximize2 className="w-3.5 h-3.5" aria-hidden="true" />
-              <span>Pantalla completa</span>
-            </>
-          ) : (
-            <>
-              <Smartphone className="w-3.5 h-3.5" aria-hidden="true" />
-              <span>Ver marco de teléfono</span>
-            </>
-          )}
-        </button>
+        <div className="flex items-center gap-1.5">
+          <button
+            type="button"
+            onClick={() => setViewMode('movil')}
+            className={`min-h-[36px] px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors inline-flex items-center gap-1 ${
+              viewMode === 'movil' ? 'bg-blue-600 text-white' : 'bg-slate-800 hover:bg-slate-700 text-slate-300'
+            }`}
+          >
+            <Smartphone className="w-3.5 h-3.5" aria-hidden="true" />
+            <span>Móvil</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setViewMode('tablet')}
+            className={`min-h-[36px] px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors inline-flex items-center gap-1 ${
+              viewMode === 'tablet' ? 'bg-blue-600 text-white' : 'bg-slate-800 hover:bg-slate-700 text-slate-300'
+            }`}
+          >
+            <Tablet className="w-3.5 h-3.5" aria-hidden="true" />
+            <span>Tablet</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setViewMode('completa')}
+            className={`min-h-[36px] px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors inline-flex items-center gap-1 ${
+              viewMode === 'completa' ? 'bg-blue-600 text-white' : 'bg-slate-800 hover:bg-slate-700 text-slate-300'
+            }`}
+          >
+            <Maximize2 className="w-3.5 h-3.5" aria-hidden="true" />
+            <span>Completa</span>
+          </button>
+        </div>
       </aside>
 
-      {/* Contenedor principal de la app móvil */}
-      <div
-        className={`w-full bg-[#F7F8FA] flex flex-col relative overflow-hidden transition-all duration-300 ${
-          deviceFrameMode
-            ? 'md:max-w-[420px] md:h-[880px] md:rounded-[48px] md:border-[10px] md:border-slate-950 md:shadow-2xl md:ring-1 md:ring-slate-700'
-            : 'min-h-screen max-w-4xl mx-auto md:rounded-2xl md:my-2 md:shadow-xl'
-        }`}
-      >
-        {/* Barra de estado simulada de teléfono */}
-        <div className="bg-white/95 px-6 pt-3 pb-1 flex items-center justify-between text-xs font-semibold text-slate-700 shrink-0 select-none">
-          <span>09:41</span>
-          <div className="w-28 h-4 bg-slate-900 rounded-full mx-auto absolute left-1/2 -translate-x-1/2 top-2 hidden md:block" aria-hidden="true" />
-          <div className="flex items-center gap-1.5">
-            <Wifi className="w-3.5 h-3.5" aria-hidden="true" />
-            <Battery className="w-4 h-4" aria-hidden="true" />
+      {/* Contenedor principal de la app */}
+      <div className={`w-full bg-[#F7F8FA] flex flex-col relative overflow-hidden transition-all duration-300 ${containerClasses}`}>
+        {/* Barra de estado simulada (en modo móvil o tablet) */}
+        {viewMode !== 'completa' && (
+          <div className="bg-white/95 px-6 pt-3 pb-1 flex items-center justify-between text-xs font-semibold text-slate-700 shrink-0 select-none hidden md:flex">
+            <span>09:41</span>
+            <div className="w-32 h-4 bg-slate-900 rounded-full mx-auto absolute left-1/2 -translate-x-1/2 top-2" aria-hidden="true" />
+            <div className="flex items-center gap-1.5">
+              <Wifi className="w-3.5 h-3.5" aria-hidden="true" />
+              <Battery className="w-4 h-4" aria-hidden="true" />
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Barra superior de la aplicación (App Bar) */}
         <header className="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200 shrink-0">
@@ -273,7 +294,7 @@ function AgendaApp() {
 
         {/* Barra de navegación inferior fija (Bottom Tab Bar) */}
         <nav
-          aria-label="Navegación móvil principal"
+          aria-label="Navegación principal"
           className="absolute bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 pb-safe shadow-lg"
         >
           <div className="grid grid-cols-5 h-[64px] items-center px-2">
