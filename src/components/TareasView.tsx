@@ -12,6 +12,7 @@ interface TareasViewProps {
 }
 
 type TaskFilter = 'todas' | 'pendientes' | 'completadas';
+type PriorityFilter = 'todas' | 'alta' | 'media' | 'baja';
 
 function PriorityBadge({ priority }: { priority?: PriorityLevel }) {
   const p = priority || 'media';
@@ -32,6 +33,7 @@ export function TareasView({
   onToggleTask,
 }: TareasViewProps) {
   const [filter, setFilter] = useState<TaskFilter>('todas');
+  const [priorityFilter, setPriorityFilter] = useState<PriorityFilter>('todas');
   const [searchTerm, setSearchTerm] = useState('');
 
   const pendingCount = tasks.filter((t) => !t.completed).length;
@@ -55,14 +57,17 @@ export function TareasView({
         t.description.toLowerCase().includes(query) ||
         t.topic.toLowerCase().includes(query);
 
-      return matchesFilter && matchesSearch;
+      const matchesPriority =
+        priorityFilter === 'todas' || (t.priority || 'media') === priorityFilter;
+
+      return matchesFilter && matchesSearch && matchesPriority;
     });
 
     return [...filtered].sort((a, b) => {
       if (a.completed !== b.completed) return a.completed ? 1 : -1;
       return a.dueDate.localeCompare(b.dueDate);
     });
-  }, [tasks, filter, searchTerm]);
+  }, [tasks, filter, priorityFilter, searchTerm]);
 
   return (
     <div className="space-y-5">
@@ -119,7 +124,48 @@ export function TareasView({
         />
       </div>
 
-      {/* Filtro interactivo */}
+      {/* Selector de filtros por prioridad debajo de la barra de búsqueda */}
+      <div className="flex items-center gap-1.5 overflow-x-auto pb-1">
+        <span className="text-xs font-semibold text-slate-500 shrink-0 mr-1">Prioridad:</span>
+        <button
+          type="button"
+          onClick={() => setPriorityFilter('todas')}
+          className={`min-h-[38px] px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap shrink-0 transition-colors ${
+            priorityFilter === 'todas' ? 'bg-slate-900 text-white shadow-xs' : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50'
+          }`}
+        >
+          Todas
+        </button>
+        <button
+          type="button"
+          onClick={() => setPriorityFilter('alta')}
+          className={`min-h-[38px] px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap shrink-0 transition-colors ${
+            priorityFilter === 'alta' ? 'bg-red-600 text-white shadow-xs' : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50'
+          }`}
+        >
+          Alta
+        </button>
+        <button
+          type="button"
+          onClick={() => setPriorityFilter('media')}
+          className={`min-h-[38px] px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap shrink-0 transition-colors ${
+            priorityFilter === 'media' ? 'bg-blue-600 text-white shadow-xs' : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50'
+          }`}
+        >
+          Media
+        </button>
+        <button
+          type="button"
+          onClick={() => setPriorityFilter('baja')}
+          className={`min-h-[38px] px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap shrink-0 transition-colors ${
+            priorityFilter === 'baja' ? 'bg-slate-700 text-white shadow-xs' : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50'
+          }`}
+        >
+          Baja
+        </button>
+      </div>
+
+      {/* Filtro interactivo de estado */}
       <div className="grid grid-cols-3 gap-1 p-1 bg-slate-200/75 rounded-xl max-w-md">
         <button
           type="button"
@@ -153,8 +199,8 @@ export function TareasView({
       {visibleTasks.length === 0 ? (
         <div className="bg-white border border-slate-200 rounded-2xl p-6 text-center space-y-3">
           <p className="text-base text-slate-600">
-            {searchTerm
-              ? 'No se encontraron tareas con ese nombre.'
+            {searchTerm || priorityFilter !== 'todas'
+              ? 'No se encontraron tareas con los filtros seleccionados.'
               : filter === 'pendientes'
                 ? 'No tienes tareas pendientes en este momento.'
                 : filter === 'completadas'
