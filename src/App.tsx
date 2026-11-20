@@ -40,7 +40,7 @@ type DeleteTarget =
   | { type: 'nota'; id: string; name: string }
   | null;
 
-type ViewMode = 'movil' | 'tablet' | 'completa';
+type ViewMode = 'tablet' | 'completa' | 'movil';
 
 function AgendaApp() {
   const {
@@ -122,32 +122,22 @@ function AgendaApp() {
 
   const containerClasses =
     viewMode === 'movil'
-      ? 'md:max-w-[420px] md:h-[880px] md:rounded-[48px] md:border-[10px] md:border-slate-950 md:shadow-2xl md:ring-1 md:ring-slate-700'
+      ? 'w-full max-w-[420px] h-[880px] rounded-[48px] border-[10px] border-slate-950 shadow-2xl ring-1 ring-slate-700'
       : viewMode === 'tablet'
-        ? 'md:max-w-[768px] md:h-[900px] md:rounded-[36px] md:border-[10px] md:border-slate-900 md:shadow-2xl md:ring-1 md:ring-slate-700'
-        : 'min-h-screen max-w-5xl mx-auto md:rounded-2xl md:my-4 md:shadow-xl';
+        ? 'w-full max-w-[820px] h-[920px] rounded-[36px] border-[10px] border-slate-900 shadow-2xl ring-1 ring-slate-700'
+        : 'min-h-screen w-full max-w-5xl mx-auto rounded-2xl shadow-xl';
 
   return (
     <div className="min-h-screen bg-slate-900 text-slate-900 flex flex-col items-center justify-start md:py-6 md:px-4">
-      {/* Controles superiores en escritorio para cambiar entre Móvil, Tablet y Pantalla Completa */}
-      <aside aria-label="Controles de visualización" className="hidden md:flex items-center justify-between w-full max-w-xl mb-3 px-2 text-white">
+      {/* Controles superiores en escritorio para cambiar entre Tablet, Completa y Móvil */}
+      <aside aria-label="Controles de visualización" className="hidden md:flex items-center justify-between w-full max-w-2xl mb-3 px-2 text-white">
         <div className="flex items-center gap-2">
           <Tablet className="w-4 h-4 text-blue-400" aria-hidden="true" />
           <span className="text-xs font-semibold tracking-wide uppercase text-slate-300">
-            Vista para Móviles y Tablets
+            Vista para Tablets y Móviles
           </span>
         </div>
         <div className="flex items-center gap-1.5">
-          <button
-            type="button"
-            onClick={() => setViewMode('movil')}
-            className={`min-h-[36px] px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors inline-flex items-center gap-1 ${
-              viewMode === 'movil' ? 'bg-blue-600 text-white' : 'bg-slate-800 hover:bg-slate-700 text-slate-300'
-            }`}
-          >
-            <Smartphone className="w-3.5 h-3.5" aria-hidden="true" />
-            <span>Móvil</span>
-          </button>
           <button
             type="button"
             onClick={() => setViewMode('tablet')}
@@ -166,14 +156,24 @@ function AgendaApp() {
             }`}
           >
             <Maximize2 className="w-3.5 h-3.5" aria-hidden="true" />
-            <span>Completa</span>
+            <span>Pantalla Completa</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setViewMode('movil')}
+            className={`min-h-[36px] px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors inline-flex items-center gap-1 ${
+              viewMode === 'movil' ? 'bg-blue-600 text-white' : 'bg-slate-800 hover:bg-slate-700 text-slate-300'
+            }`}
+          >
+            <Smartphone className="w-3.5 h-3.5" aria-hidden="true" />
+            <span>Móvil</span>
           </button>
         </div>
       </aside>
 
       {/* Contenedor principal de la app */}
-      <div className={`w-full bg-[#F7F8FA] flex flex-col relative overflow-hidden transition-all duration-300 ${containerClasses}`}>
-        {/* Barra de estado simulada (en modo móvil o tablet) */}
+      <div className={`bg-[#F7F8FA] flex flex-col relative overflow-hidden transition-all duration-300 ${containerClasses}`}>
+        {/* Barra de estado simulada */}
         {viewMode !== 'completa' && (
           <div className="bg-white/95 px-6 pt-3 pb-1 flex items-center justify-between text-xs font-semibold text-slate-700 shrink-0 select-none hidden md:flex">
             <span>09:41</span>
